@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos :: cabeca('Veículo')}"></head>
+<body>
+<nav th:replace="~{fragmentos :: menu}"></nav>
+<main>
+    <h1 th:text="${form.id == null} ? 'Novo veículo' : 'Editar veículo'">Veículo</h1>
+
+    <p class="aviso erro" th:if="${erro}" th:text="${erro}"></p>
+
+    <form th:action="@{/veiculos}" th:object="${form}" method="post" class="formulario">
+        <input type="hidden" th:field="*{id}"/>
+
+        <!-- Tipo: escolhido so ao criar; na edicao fica fixo -->
+        <label th:if="${form.id == null}">Tipo
+            <select th:field="*{tipo}" id="tipo" onchange="alternarCampos()">
+                <option value="">Selecione...</option>
+                <option value="CAMINHAO">Caminhão</option>
+                <option value="CARRETA">Carreta</option>
+            </select>
+        </label>
+        <div th:if="${form.id != null}">
+            <input type="hidden" th:field="*{tipo}" id="tipo"/>
+            <p><strong>Tipo:</strong>
+                <span th:text="${form.tipo == 'CAMINHAO'} ? 'Caminhão' : 'Carreta'">-</span></p>
+        </div>
+
+        <label>Descrição
+            <input type="text" th:field="*{descricao}" maxlength="100"/>
+        </label>
+        <label>PBTC (kg)
+            <input type="number" step="any" min="0" th:field="*{pbtc}"/>
+        </label>
+        <label>Número de eixos
+            <input type="number" step="1" min="1" th:field="*{numeroEixos}"/>
+        </label>
+        <label>Tara (kg) <small>(carreta: tara do cavalo)</small>
+            <input type="number" step="any" min="0" th:field="*{tara}"/>
+        </label>
+
+        <label id="campoCaminhao">Capacidade do tanque (L)
+            <input type="number" step="any" min="0" th:field="*{capacidadeLitros}"/>
+        </label>
+        <label id="campoCarreta">Tara do semirreboque (kg)
+            <input type="number" step="any" min="0" th:field="*{taraSemirreboque}"/>
+        </label>
+
+        <div class="botoes">
+            <button type="submit">Salvar</button>
+            <a class="botao secundario" th:href="@{/veiculos}">Cancelar</a>
+        </div>
+    </form>
+</main>
+
+<script>
+    // Mostra so os campos do tipo escolhido (caminhao x carreta).
+    function alternarCampos() {
+        var tipo = document.getElementById('tipo').value;
+        document.getElementById('campoCaminhao').style.display = (tipo === 'CAMINHAO') ? '' : 'none';
+        document.getElementById('campoCarreta').style.display = (tipo === 'CARRETA') ? '' : 'none';
+    }
+    alternarCampos();
+</script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  pom.xml  (VERSÃO 2)
+  ============================================================
+  O pom.xml é a "ficha técnica" do projeto Maven: diz o nome do
+  projeto, a versão do Java e QUAIS BIBLIOTECAS (dependências) ele
+  usa. O Maven lê este arquivo e baixa tudo sozinho.
+
+  Mudanças em relação à versão gerada pelo Spring Initializr:
+    - spring-boot-starter-data-jpa  ->  spring-boot-starter-data-jdbc
+      (o professor pediu Spring Data JDBC no lugar de JPA/Hibernate)
+    - ADICIONADO spring-boot-starter-thymeleaf (telas, indicado pelo professor)
+    - REMOVIDO spring-boot-starter-data-jpa-test (não há mais JPA)
+    - name e description preenchidos; blocos vazios (license, developer, scm) removidos
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<!-- Projeto "pai": define as versões compatíveis de todas as bibliotecas Spring -->
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>4.1.2</version>
+		<relativePath/> <!-- procura o pai no repositório online -->
+	</parent>
+
+	<!-- Identificação do nosso projeto -->
+	<groupId>br.fatec.loadx</groupId>
+	<artifactId>loadx-api</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>loadx-api</name>
+	<description>Sistema de cálculo e programação de carregamentos (projeto P2, dados fictícios)</description>
+
+	<properties>
+		<java.version>21</java.version>
+	</properties>
+
+	<dependencies>
+
+		<!-- ACESSO AO BANCO: Spring Data JDBC (repositórios sobre JDBC, sem Hibernate) -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jdbc</artifactId>
+		</dependency>
+
+		<!-- TELAS: Thymeleaf (páginas HTML preenchidas pelo servidor) -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+
+		<!-- VALIDAÇÃO de dados (mantida; pode ser removida se não for usada) -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+
+		<!-- WEB: servidor (Tomcat) e controllers do Spring MVC -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webmvc</artifactId>
+		</dependency>
+
+		<!-- DRIVER do PostgreSQL: só é necessário em tempo de execução -->
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+		<!-- TESTES (só são usados ao rodar testes automatizados) -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webmvc-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<plugins>
+			<!-- Plugin que empacota e executa a aplicação Spring Boot -->
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

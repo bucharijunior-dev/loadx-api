@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos :: cabeca('Produto')}"></head>
+<body>
+<nav th:replace="~{fragmentos :: menu}"></nav>
+<main>
+    <h1 th:text="${form.id == null} ? 'Novo produto' : 'Editar produto'">Produto</h1>
+
+    <p class="aviso erro" th:if="${erro}" th:text="${erro}"></p>
+
+    <form th:action="@{/produtos}" th:object="${form}" method="post" class="formulario">
+        <input type="hidden" th:field="*{id}"/>
+
+        <label th:if="${form.id == null}">Tipo
+            <select th:field="*{tipo}" id="tipo" onchange="alternarCampos()">
+                <option value="">Selecione...</option>
+                <option value="COMUM">Comum</option>
+                <option value="COM_EXPANSAO">Com expansão</option>
+            </select>
+        </label>
+        <div th:if="${form.id != null}">
+            <input type="hidden" th:field="*{tipo}" id="tipo"/>
+            <p><strong>Tipo:</strong>
+                <span th:text="${form.tipo == 'COMUM'} ? 'Comum' : 'Com expansão'">-</span></p>
+        </div>
+
+        <label>Nome
+            <input type="text" th:field="*{nome}" maxlength="100"/>
+        </label>
+        <label>Densidade (kg/L)
+            <input type="number" step="any" min="0" th:field="*{densidade}"/>
+        </label>
+        <label>Tolerância (%) <small>(10 significa 10%)</small>
+            <input type="number" step="any" min="0" max="100" th:field="*{toleranciaPercentual}"/>
+        </label>
+        <label id="campoExpansao">Margem de expansão (%)
+            <input type="number" step="any" min="0" max="100" th:field="*{margemExpansaoPercentual}"/>
+        </label>
+
+        <div class="botoes">
+            <button type="submit">Salvar</button>
+            <a class="botao secundario" th:href="@{/produtos}">Cancelar</a>
+        </div>
+    </form>
+</main>
+
+<script>
+    // Mostra a margem de expansao somente para produtos COM_EXPANSAO.
+    function alternarCampos() {
+        var tipo = document.getElementById('tipo').value;
+        document.getElementById('campoExpansao').style.display = (tipo === 'COM_EXPANSAO') ? '' : 'none';
+    }
+    alternarCampos();
+</script>
+</body>
+</html>

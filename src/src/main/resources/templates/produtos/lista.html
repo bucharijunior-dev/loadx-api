@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos :: cabeca('Produtos')}"></head>
+<body>
+<nav th:replace="~{fragmentos :: menu}"></nav>
+<main>
+    <div class="topo">
+        <h1>Produtos</h1>
+        <a class="botao" th:href="@{/produtos/novo}">Novo produto</a>
+    </div>
+
+    <p class="aviso ok" th:if="${mensagem}" th:text="${mensagem}"></p>
+    <p class="aviso erro" th:if="${erro}" th:text="${erro}"></p>
+
+    <p th:if="${#lists.isEmpty(produtos)}">Nenhum produto cadastrado.</p>
+
+    <table th:unless="${#lists.isEmpty(produtos)}">
+        <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Tipo</th>
+            <th>Densidade</th>
+            <th>Tolerância (%)</th>
+            <th>Margem de expansão (%)</th>
+            <th>Ações</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="p : ${produtos}">
+            <td th:text="${p.nome}">-</td>
+            <td th:text="${p.tipo == 'COMUM'} ? 'Comum' : 'Com expansão'">-</td>
+            <td class="num" th:text="${#numbers.formatDecimal(p.densidade, 1, 'POINT', 3, 'COMMA')}">0</td>
+            <td class="num" th:text="${#numbers.formatDecimal(p.toleranciaPercentual, 1, 'POINT', 1, 'COMMA')}">0</td>
+            <td class="num" th:text="${p.margemExpansaoPercentual != null} ? ${#numbers.formatDecimal(p.margemExpansaoPercentual, 1, 'POINT', 1, 'COMMA')} : '-'">-</td>
+            <td class="acoes">
+                <a th:href="@{/produtos/{id}/editar(id=${p.id})}">Editar</a>
+                <form th:action="@{/produtos/{id}/excluir(id=${p.id})}" method="post"
+                      onsubmit="return confirm('Excluir este produto?');">
+                    <button type="submit" class="perigo">Excluir</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+</body>
+</html>

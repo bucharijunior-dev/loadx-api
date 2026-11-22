@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos :: cabeca('Nova programação')}"></head>
+<body>
+<nav th:replace="~{fragmentos :: menu}"></nav>
+<main>
+    <h1>Nova programação</h1>
+
+    <p class="aviso erro" th:if="${erro}" th:text="${erro}"></p>
+
+    <p th:if="${#lists.isEmpty(veiculos) or #lists.isEmpty(produtos)}" class="aviso erro">
+        Cadastre ao menos um veículo e um produto antes de programar.
+    </p>
+
+    <form th:action="@{/programacoes}" th:object="${form}" method="post" class="formulario">
+        <label>Ordem de transporte (OT)
+            <input type="text" th:field="*{ordemTransporte}" maxlength="30"/>
+        </label>
+
+        <label>Veículo
+            <select th:field="*{veiculoId}" id="veiculo" onchange="sugerirCapacidade()">
+                <option value="">Selecione...</option>
+                <option th:each="v : ${veiculos}" th:value="${v.id}" th:text="${v.descricao}"
+                        th:attr="data-capacidade=${v.capacidadeLitros}">-</option>
+            </select>
+        </label>
+
+        <label>Produto
+            <select th:field="*{produtoId}">
+                <option value="">Selecione...</option>
+                <option th:each="p : ${produtos}" th:value="${p.id}" th:text="${p.nome}">-</option>
+            </select>
+        </label>
+
+        <label>Capacidade do tanque (L) <small>(sugerida para caminhão)</small>
+            <input type="number" step="any" min="0" th:field="*{capacidadeTanqueLitros}" id="capacidade"/>
+        </label>
+
+        <label>Data/hora prevista
+            <input type="datetime-local" th:field="*{dataHoraPrevista}"/>
+        </label>
+
+        <div class="botoes">
+            <button type="submit">Salvar</button>
+            <a class="botao secundario" th:href="@{/programacoes}">Cancelar</a>
+        </div>
+    </form>
+</main>
+
+<script>
+    // Ao escolher um caminhao, sugere a capacidade do tanque dele.
+    function sugerirCapacidade() {
+        var sel = document.getElementById('veiculo');
+        var cap = sel.options[sel.selectedIndex].getAttribute('data-capacidade');
+        if (cap) { document.getElementById('capacidade').value = cap; }
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos :: cabeca('Conferir peso')}"></head>
+<body>
+<nav th:replace="~{fragmentos :: menu}"></nav>
+<main>
+    <h1>Conferir peso</h1>
+
+    <div class="formulario">
+        <p><strong>OT:</strong> <span th:text="${linha.ordemTransporte}">-</span></p>
+        <p><strong>Veículo:</strong> <span th:text="${linha.veiculo}">-</span></p>
+        <p><strong>Produto:</strong> <span th:text="${linha.produto}">-</span></p>
+        <p><strong>Litros máximos:</strong>
+            <span th:text="${#numbers.formatDecimal(linha.litrosMaximos, 1, 'POINT', 0, 'COMMA')}">0</span> L
+            (limitante: <span th:text="${linha.fatorLimitante}">-</span>)</p>
+        <p><strong>Peso previsto:</strong>
+            <span th:text="${#numbers.formatDecimal(linha.pesoPrevisto, 1, 'POINT', 0, 'COMMA')}">0</span> kg</p>
+        <p><strong>Tolerância do produto:</strong>
+            <span th:text="${#numbers.formatDecimal(linha.toleranciaPercentual, 1, 'POINT', 1, 'COMMA')}">0</span>%</p>
+    </div>
+
+    <p class="aviso erro" th:if="${erro}" th:text="${erro}"></p>
+
+    <form th:action="@{/programacoes/{id}/conferir(id=${linha.id})}" method="post" class="formulario">
+        <label>Peso real da balança (kg)
+            <input type="number" step="any" min="0" name="pesoReal" th:value="${pesoReal}"/>
+        </label>
+        <div class="botoes">
+            <button type="submit">Conferir</button>
+            <a class="botao secundario" th:href="@{/programacoes}">Voltar</a>
+        </div>
+    </form>
+
+    <p class="aviso ok" th:if="${confere != null and confere}">Peso DENTRO da tolerância.</p>
+    <p class="aviso erro" th:if="${confere != null and !confere}">Peso FORA da tolerância.</p>
+</main>
+</body>
+</html>

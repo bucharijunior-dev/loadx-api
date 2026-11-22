@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos :: cabeca('Programações')}"></head>
+<body>
+<nav th:replace="~{fragmentos :: menu}"></nav>
+<main class="larga">
+    <div class="topo">
+        <h1>Programações</h1>
+        <a class="botao" th:href="@{/programacoes/nova}">Nova programação</a>
+    </div>
+
+    <p class="aviso ok" th:if="${mensagem}" th:text="${mensagem}"></p>
+    <p class="aviso erro" th:if="${erro}" th:text="${erro}"></p>
+
+    <p th:if="${#lists.isEmpty(programacoes)}">Nenhuma programação cadastrada.</p>
+
+    <table th:unless="${#lists.isEmpty(programacoes)}">
+        <thead>
+        <tr>
+            <th>OT</th>
+            <th>Previsão</th>
+            <th>Veículo</th>
+            <th>Produto</th>
+            <th>Status</th>
+            <th>Litros máx.</th>
+            <th>Peso previsto (kg)</th>
+            <th>Limitante</th>
+            <th>Ações</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="l : ${programacoes}">
+            <td th:text="${l.ordemTransporte}">-</td>
+            <td th:text="${l.dataHora}">-</td>
+            <td th:text="${l.veiculo}">-</td>
+            <td th:text="${l.produto}">-</td>
+            <td><span th:class="${'status ' + l.status}" th:text="${l.statusDescricao}">-</span></td>
+            <td class="num" th:text="${#numbers.formatDecimal(l.litrosMaximos, 1, 'POINT', 0, 'COMMA')}">0</td>
+            <td class="num" th:text="${#numbers.formatDecimal(l.pesoPrevisto, 1, 'POINT', 0, 'COMMA')}">0</td>
+            <td th:text="${l.fatorLimitante}">-</td>
+            <td class="acoes">
+                <form th:if="${l.status == 'AGENDADA'}" th:action="@{/programacoes/{id}/iniciar(id=${l.id})}" method="post">
+                    <button type="submit">Iniciar</button>
+                </form>
+                <form th:if="${l.status == 'EM_CARREGAMENTO'}" th:action="@{/programacoes/{id}/concluir(id=${l.id})}" method="post">
+                    <button type="submit">Concluir</button>
+                </form>
+                <form th:if="${l.status == 'AGENDADA'}" th:action="@{/programacoes/{id}/cancelar(id=${l.id})}" method="post"
+                      onsubmit="return confirm('Cancelar esta programação?');">
+                    <button type="submit" class="secundario">Cancelar</button>
+                </form>
+                <a th:href="@{/programacoes/{id}/conferir(id=${l.id})}">Conferir peso</a>
+                <form th:action="@{/programacoes/{id}/excluir(id=${l.id})}" method="post"
+                      onsubmit="return confirm('Excluir esta programação?');">
+                    <button type="submit" class="perigo">Excluir</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+</body>
+</html>

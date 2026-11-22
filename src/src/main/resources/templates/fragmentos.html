@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<!--
+  fragmentos.html
+  Pedacos de pagina REUTILIZADOS por todas as telas (cabecalho e menu).
+  POR QUE: evita repetir o mesmo HTML em cada tela. Se o menu mudar,
+  muda-se em um lugar so.
+  COMO: cada tela chama th:replace="~{fragmentos :: nome}".
+-->
+<head th:fragment="cabeca(titulo)">
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title th:text="${titulo} + ' - LoadX'">LoadX</title>
+    <link rel="stylesheet" th:href="@{/css/estilo.css}"/>
+</head>
+<body>
+<nav th:fragment="menu" class="menu">
+    <span class="marca">LoadX</span>
+    <a th:href="@{/}">Início</a>
+    <a th:href="@{/veiculos}">Veículos</a>
+    <a th:href="@{/produtos}">Produtos</a>
+    <a th:href="@{/programacoes}">Programações</a>
+</nav>
+</body>
+</html>

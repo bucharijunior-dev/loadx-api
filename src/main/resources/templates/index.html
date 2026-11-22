@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos :: cabeca('Início')}"></head>
+<body>
+<nav th:replace="~{fragmentos :: menu}"></nav>
+<main>
+    <h1>LoadX</h1>
+    <p>Sistema de programação e cálculo de carregamentos de veículos com produtos químicos.</p>
+    <div class="cartoes">
+        <a class="cartao" th:href="@{/veiculos}">
+            <strong>Veículos</strong>
+            <span>Caminhões e carretas</span>
+        </a>
+        <a class="cartao" th:href="@{/produtos}">
+            <strong>Produtos</strong>
+            <span>Densidade, tolerância e expansão</span>
+        </a>
+        <a class="cartao" th:href="@{/programacoes}">
+            <strong>Programações</strong>
+            <span>Agendar, calcular litros e acompanhar status</span>
+        </a>
+    </div>
+</main>
+</body>
+</html>

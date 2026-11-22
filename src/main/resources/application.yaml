@@ -1,0 +1,30 @@
+# ============================================================
+# application.yaml  (substitui application.properties)
+# ------------------------------------------------------------
+# Configuração principal da aplicação, em formato YAML.
+# ATENÇÃO: no YAML o recuo (indentação) faz parte da sintaxe.
+# Use sempre ESPAÇOS (2 por nível), NUNCA a tecla Tab.
+# ============================================================
+spring:
+
+  application:
+    name: loadx-api
+
+  # Ativa o perfil "local": o Spring também lê o arquivo
+  # application-local.yaml, onde fica a senha do banco.
+  profiles:
+    active: local
+
+  # Conexão com o PostgreSQL (banco criado no pgAdmin)
+  datasource:
+    url: jdbc:postgresql://localhost:5432/loadx_java
+    username: postgres
+    # A senha NÃO fica aqui: está em application-local.yaml
+
+  # O Spring Data JDBC não cria tabelas sozinho. Por isso mandamos
+  # o Spring executar o arquivo schema.sql (pasta resources) a cada
+  # inicialização. O script usa "CREATE TABLE IF NOT EXISTS", então
+  # é seguro repetir.
+  sql:
+    init:
+      mode: always
