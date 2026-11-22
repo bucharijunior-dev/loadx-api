@@ -52,7 +52,7 @@
     function sugerirCapacidade() {
         var sel = document.getElementById('veiculo');
         var cap = sel.options[sel.selectedIndex].getAttribute('data-capacidade');
-        if (cap) { document.getElementById('capacidade').value = cap; }
+        if (parseFloat(cap) > 0) { document.getElementById('capacidade').value = cap; }
     }
 </script>
 </body>

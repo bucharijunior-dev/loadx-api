@@ -50,8 +50,11 @@ public class Caminhao extends Veiculo {
     public double getCapacidadeLitros() { return capacidadeLitros; }
 
     public void setCapacidadeLitros(double capacidadeLitros) {
-        if (capacidadeLitros <= 0) {
-            throw new IllegalArgumentException("A capacidade em litros deve ser maior que zero.");
+        // VERSÃO 2: aceita ZERO (capacidade não informada no cadastro).
+        // A capacidade real é informada em cada programação/cálculo, que
+        // exigem um valor maior que zero.
+        if (capacidadeLitros < 0) {
+            throw new IllegalArgumentException("A capacidade em litros não pode ser negativa.");
         }
         this.capacidadeLitros = capacidadeLitros;
     }

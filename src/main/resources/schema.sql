@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS veiculo (
     pbtc              DOUBLE PRECISION NOT NULL CHECK (pbtc > 0),
     numero_eixos      INTEGER          NOT NULL CHECK (numero_eixos >= 2),
     tara              DOUBLE PRECISION NOT NULL CHECK (tara >= 0),
-    capacidade_litros DOUBLE PRECISION CHECK (capacidade_litros > 0),    -- só CAMINHAO
+    capacidade_litros DOUBLE PRECISION CHECK (capacidade_litros >= 0),   -- só CAMINHAO (0 = não informada)
     tara_semirreboque DOUBLE PRECISION CHECK (tara_semirreboque >= 0)    -- só CARRETA
 );
 
@@ -53,3 +53,12 @@ CREATE TABLE IF NOT EXISTS programacao (
     status                   VARCHAR(20)      NOT NULL
         CHECK (status IN ('AGENDADA', 'EM_CARREGAMENTO', 'CONCLUIDA', 'CANCELADA'))
 );
+
+-- ------------------------------------------------------------
+-- AJUSTE (VERSÃO 2): a capacidade do caminhão passou a aceitar ZERO.
+-- Para bancos criados antes desta mudança, troca a regra antiga
+-- (> 0) por (>= 0). É seguro rodar a cada inicialização:
+-- DROP IF EXISTS + ADD recria a regra sempre do mesmo jeito.
+-- ------------------------------------------------------------
+ALTER TABLE veiculo DROP CONSTRAINT IF EXISTS veiculo_capacidade_litros_check;
+ALTER TABLE veiculo ADD CONSTRAINT veiculo_capacidade_litros_check CHECK (capacidade_litros >= 0);

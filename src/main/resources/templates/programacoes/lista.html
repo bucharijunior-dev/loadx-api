@@ -14,7 +14,9 @@
 
     <p th:if="${#lists.isEmpty(programacoes)}">Nenhuma programação cadastrada.</p>
 
-    <table th:unless="${#lists.isEmpty(programacoes)}">
+    <p class="dica" th:unless="${#lists.isEmpty(programacoes)}">Clique no título de uma coluna para ordenar (clique de novo para inverter).</p>
+
+    <table class="ordenavel" th:unless="${#lists.isEmpty(programacoes)}">
         <thead>
         <tr>
             <th>OT</th>

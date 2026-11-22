@@ -5,20 +5,60 @@
 <nav th:replace="~{fragmentos :: menu}"></nav>
 <main>
     <h1>LoadX</h1>
-    <p>Sistema de programação e cálculo de carregamentos de veículos com produtos químicos.</p>
-    <div class="cartoes">
-        <a class="cartao" th:href="@{/veiculos}">
+    <p class="subtitulo">Sistema de programação e cálculo de carregamentos de veículos com produtos químicos.</p>
+
+    <!-- Quatro quadrantes. Os icones sao SVG desenhados aqui mesmo
+         (sem arquivos de imagem), com a cor do texto (currentColor). -->
+    <div class="quadrantes">
+
+        <a class="quadrante" th:href="@{/veiculos}">
+            <svg viewBox="0 0 64 64" aria-hidden="true">
+                <rect x="6" y="20" width="34" height="20" rx="10"/>
+                <path d="M40 40V28h10l8 8v4z"/>
+                <path d="M6 40h52"/>
+                <circle cx="16" cy="46" r="4"/>
+                <circle cx="32" cy="46" r="4"/>
+                <circle cx="50" cy="46" r="4"/>
+            </svg>
             <strong>Veículos</strong>
-            <span>Caminhões e carretas</span>
+            <span>Caminhões e carretas, PBTC, eixos e tara</span>
         </a>
-        <a class="cartao" th:href="@{/produtos}">
+
+        <a class="quadrante" th:href="@{/produtos}">
+            <svg viewBox="0 0 64 64" aria-hidden="true">
+                <path d="M26 8h12"/>
+                <path d="M28 8v16L14 50a4 4 0 0 0 4 6h28a4 4 0 0 0 4-6L36 24V8"/>
+                <path d="M20 40h24"/>
+            </svg>
             <strong>Produtos</strong>
             <span>Densidade, tolerância e expansão</span>
         </a>
-        <a class="cartao" th:href="@{/programacoes}">
+
+        <a class="quadrante" th:href="@{/programacoes}">
+            <svg viewBox="0 0 64 64" aria-hidden="true">
+                <rect x="10" y="14" width="44" height="40" rx="4"/>
+                <path d="M10 26h44M22 8v10M42 8v10"/>
+                <path d="M24 40l6 6 12-12"/>
+            </svg>
             <strong>Programações</strong>
-            <span>Agendar, calcular litros e acompanhar status</span>
+            <span>Agendar, iniciar, concluir e conferir peso</span>
         </a>
+
+        <a class="quadrante" th:href="@{/calculo}">
+            <svg viewBox="0 0 64 64" aria-hidden="true">
+                <rect x="14" y="8" width="36" height="48" rx="4"/>
+                <rect x="20" y="14" width="24" height="10"/>
+                <circle cx="23" cy="34" r="2"/>
+                <circle cx="32" cy="34" r="2"/>
+                <circle cx="41" cy="34" r="2"/>
+                <circle cx="23" cy="44" r="2"/>
+                <circle cx="32" cy="44" r="2"/>
+                <circle cx="41" cy="44" r="2"/>
+            </svg>
+            <strong>Cálculo</strong>
+            <span>Simular carga: PBTC, tara, DNIT, quebra-ondas</span>
+        </a>
+
     </div>
 </main>
 </body>

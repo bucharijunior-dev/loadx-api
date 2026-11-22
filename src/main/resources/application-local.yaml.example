@@ -1,0 +1,7 @@
+# MODELO do arquivo de senha do banco.
+# Copie este arquivo para "application-local.yaml" (mesma pasta) e troque a senha.
+# O application-local.yaml fica FORA do GitHub (esta no .gitignore) para
+# a senha nunca ser publicada.
+spring:
+  datasource:
+    password: SUA_SENHA_AQUI

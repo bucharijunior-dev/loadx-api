@@ -14,7 +14,9 @@
 
     <p th:if="${#lists.isEmpty(veiculos)}">Nenhum veículo cadastrado.</p>
 
-    <table th:unless="${#lists.isEmpty(veiculos)}">
+    <p class="dica" th:unless="${#lists.isEmpty(veiculos)}">Clique no título de uma coluna para ordenar (clique de novo para inverter).</p>
+
+    <table class="ordenavel" th:unless="${#lists.isEmpty(veiculos)}">
         <thead>
         <tr>
             <th>Descrição</th>

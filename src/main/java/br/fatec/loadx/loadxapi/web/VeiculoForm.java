@@ -45,7 +45,7 @@ public class VeiculoForm {
         switch (tipo) {
             case VeiculoMapeador.TIPO_CAMINHAO -> veiculo = new Caminhao(
                     descricao, exigir(pbtc, "PBTC"), exigir(numeroEixos, "Número de eixos"),
-                    exigir(tara, "Tara"), exigir(capacidadeLitros, "Capacidade (L)"));
+                    exigir(tara, "Tara"), zeroSeVazio(capacidadeLitros));
             case VeiculoMapeador.TIPO_CARRETA -> veiculo = new Carreta(
                     descricao, exigir(pbtc, "PBTC"), exigir(numeroEixos, "Número de eixos"),
                     exigir(tara, "Tara do cavalo"), exigir(taraSemirreboque, "Tara do semirreboque"));
@@ -78,12 +78,27 @@ public class VeiculoForm {
         return f;
     }
 
+    // Campo opcional: em branco vale zero (ex.: capacidade do caminhão,
+    // que é informada em cada programação ou cálculo).
+    private static double zeroSeVazio(Double valor) {
+        return valor == null ? 0.0 : valor;
+    }
+
     // Se o valor veio vazio, recusa com uma mensagem clara.
     private static <T> T exigir(T valor, String campo) {
         if (valor == null || (valor instanceof String s && s.isBlank())) {
             throw new IllegalArgumentException("Preencha o campo: " + campo + ".");
         }
         return valor;
+    }
+
+    // Tara total do conjunto (para sugerir na tela de cálculo):
+    // PBTC - capacidade líquida = tara do caminhão, ou cavalo + semirreboque.
+    public Double getTaraTotal() {
+        if (pbtc == null || capacidadeLiquida == null) {
+            return null;
+        }
+        return Math.round((pbtc - capacidadeLiquida) * 100.0) / 100.0;
     }
 
     public Long getId() { return id; }

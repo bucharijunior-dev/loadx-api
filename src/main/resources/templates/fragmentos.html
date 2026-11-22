@@ -12,6 +12,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title th:text="${titulo} + ' - LoadX'">LoadX</title>
     <link rel="stylesheet" th:href="@{/css/estilo.css}"/>
+    <script th:src="@{/js/ordenar.js}" defer="defer"></script>
 </head>
 <body>
 <nav th:fragment="menu" class="menu">
@@ -20,6 +21,7 @@
     <a th:href="@{/veiculos}">Veículos</a>
     <a th:href="@{/produtos}">Produtos</a>
     <a th:href="@{/programacoes}">Programações</a>
+    <a th:href="@{/calculo}">Cálculo</a>
 </nav>
 </body>
 </html>

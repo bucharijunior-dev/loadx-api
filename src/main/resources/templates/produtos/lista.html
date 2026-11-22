@@ -14,7 +14,9 @@
 
     <p th:if="${#lists.isEmpty(produtos)}">Nenhum produto cadastrado.</p>
 
-    <table th:unless="${#lists.isEmpty(produtos)}">
+    <p class="dica" th:unless="${#lists.isEmpty(produtos)}">Clique no título de uma coluna para ordenar (clique de novo para inverter).</p>
+
+    <table class="ordenavel" th:unless="${#lists.isEmpty(produtos)}">
         <thead>
         <tr>
             <th>Nome</th>

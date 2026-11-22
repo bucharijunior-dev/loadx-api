@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos :: cabeca('Cálculo')}"></head>
+<body>
+<nav th:replace="~{fragmentos :: menu}"></nav>
+<main class="larga">
+    <h1>Cálculo de carregamento</h1>
+
+    <p class="aviso erro" th:if="${erro}" th:text="${erro}"></p>
+    <p class="aviso erro" th:if="${#lists.isEmpty(veiculos) or #lists.isEmpty(produtos)}">
+        Cadastre ao menos um veículo e um produto para calcular.
+    </p>
+
+    <div class="duas-colunas">
+
+        <!-- ENTRADAS -->
+        <form th:action="@{/calculo}" th:object="${form}" method="post" class="formulario">
+            <p class="dica"><span class="obrig">*</span> Campo obrigatório (tara e capacidade devem ser maiores que zero)</p>
+            <label>Veículo (configuração PBTC) <span class="obrig">*</span>
+                <select th:field="*{veiculoId}" id="veiculo" onchange="sugerir()" required="required">
+                    <option value="">Selecione...</option>
+                    <option th:each="v : ${veiculos}" th:value="${v.id}" th:text="${v.descricao}"
+                            th:attr="data-tara=${v.taraTotal},data-capacidade=${v.capacidadeLitros}">-</option>
+                </select>
+            </label>
+
+            <label>Produto <span class="obrig">*</span>
+                <select th:field="*{produtoId}" required="required">
+                    <option value="">Selecione...</option>
+                    <option th:each="p : ${produtos}" th:value="${p.id}" th:text="${p.nome}">-</option>
+                </select>
+            </label>
+
+            <label>Tara (kg) <span class="obrig">*</span> <small>(sugerida pelo cadastro; ajuste para a viagem)</small>
+                <input type="number" step="any" min="0.01" th:field="*{tara}" id="tara" required="required"/>
+            </label>
+
+            <label>Capacidade do tanque (L) <span class="obrig">*</span>
+                <input type="number" step="any" min="0.01" th:field="*{capacidadeTanqueLitros}" id="capacidade" required="required"/>
+            </label>
+
+            <label>Pedido do cliente (kg) <small>(opcional)</small>
+                <input type="number" step="any" min="0" th:field="*{pedidoKg}"/>
+            </label>
+
+            <label>Tolerância do pedido (%) <small>(10 significa 10%)</small>
+                <input type="number" step="any" min="0" max="100" th:field="*{toleranciaPedidoPercentual}"/>
+            </label>
+
+            <label>Mínimo de litros <small>(opcional)</small>
+                <input type="number" step="any" min="0" th:field="*{minimoLitros}"/>
+            </label>
+
+            <label class="opcao"><input type="checkbox" th:field="*{dnit}"/> Autorização DNIT (PBTC +5%)</label>
+            <label class="opcao"><input type="checkbox" th:field="*{quebraOndas}"/> Quebra-ondas (ocupação mínima 80%)</label>
+
+            <div class="botoes">
+                <button type="submit">Calcular</button>
+                <a class="botao secundario" th:href="@{/calculo}">Limpar</a>
+            </div>
+        </form>
+
+        <!-- RESULTADO -->
+        <section class="painel" th:if="${resultado}">
+            <h2>Resultado: <span th:text="${resultado.veiculo}">-</span> com
+                <span th:text="${resultado.produto}">-</span></h2>
+
+            <div th:class="${resultado.aprovado} ? 'faixa ok' : 'faixa erro'"
+                 th:text="${resultado.aprovado} ? 'Carregamento aprovado em todas as regras' : 'Há regras reprovadas'">-</div>
+
+            <div class="indicadores">
+                <div class="indicador"><span>Peso líquido (kg)</span>
+                    <strong th:text="${#numbers.formatDecimal(resultado.pesoLiquido, 1, 'POINT', 0, 'COMMA')}">0</strong></div>
+                <div class="indicador"><span>Peso total (kg)</span>
+                    <strong th:text="${#numbers.formatDecimal(resultado.pesoTotal, 1, 'POINT', 0, 'COMMA')}">0</strong></div>
+                <div class="indicador"><span>Litros</span>
+                    <strong th:text="${#numbers.formatDecimal(resultado.litros, 1, 'POINT', 0, 'COMMA')}">0</strong></div>
+                <div class="indicador"><span>Ocupação</span>
+                    <strong th:text="${#numbers.formatDecimal(resultado.ocupacao, 1, 'POINT', 1, 'COMMA')} + '%'">0</strong></div>
+            </div>
+
+            <p><strong>Limite que mandou:</strong> <span th:text="${resultado.fatorLimitante}">-</span>
+               (PBTC efetivo: <span th:text="${#numbers.formatDecimal(resultado.pbtcEfetivo, 1, 'POINT', 0, 'COMMA')}">0</span> kg)</p>
+
+            <table class="limites">
+                <thead><tr><th>Limite</th><th>kg</th></tr></thead>
+                <tbody>
+                <tr><td>Peso (PBTC - tara)</td>
+                    <td class="num" th:text="${#numbers.formatDecimal(resultado.limitePeso, 1, 'POINT', 0, 'COMMA')}">0</td></tr>
+                <tr><td>Volume (tanque x densidade)</td>
+                    <td class="num" th:text="${#numbers.formatDecimal(resultado.limiteVolume, 1, 'POINT', 0, 'COMMA')}">0</td></tr>
+                <tr><td>Pedido (ou teto sem pedido)</td>
+                    <td class="num" th:text="${#numbers.formatDecimal(resultado.limitePedido, 1, 'POINT', 0, 'COMMA')}">0</td></tr>
+                </tbody>
+            </table>
+
+            <h2>Validações</h2>
+            <ul class="validacoes">
+                <li th:each="v : ${resultado.validacoes}" th:class="${v.aprovado} ? 'ok' : 'erro'" th:text="${v.mensagem}">-</li>
+            </ul>
+        </section>
+
+        <section class="painel" th:unless="${resultado}">
+            <h2>Resultado</h2>
+            <p>Escolha o veículo e o produto, confira a tara e clique em <strong>Calcular</strong>.</p>
+        </section>
+    </div>
+</main>
+
+<script>
+    // Ao escolher um veiculo, sugere a tara e a capacidade do cadastro.
+    function sugerir() {
+        var sel = document.getElementById('veiculo');
+        var opt = sel.options[sel.selectedIndex];
+        var tara = opt.getAttribute('data-tara');
+        var cap = opt.getAttribute('data-capacidade');
+        if (parseFloat(tara) > 0) { document.getElementById('tara').value = tara; }
+        if (parseFloat(cap) > 0) { document.getElementById('capacidade').value = cap; }
+    }
+</script>
+</body>
+</html>
