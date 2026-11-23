@@ -1,25 +1,43 @@
 # ============================================================
-# application.yaml  (substitui application.properties)
+# application.yaml  (VERSÃO 2: preparado para hospedagem)
 # ------------------------------------------------------------
 # Configuração principal da aplicação, em formato YAML.
 # ATENÇÃO: no YAML o recuo (indentação) faz parte da sintaxe.
 # Use sempre ESPAÇOS (2 por nível), NUNCA a tecla Tab.
+#
+# O QUE MUDOU nesta versão:
+#   - server.port lê a variável de ambiente PORT (a hospedagem define
+#     a porta); no seu computador continua 8080.
+#   - hikari.maximum-pool-size limita as conexões abertas com o banco
+#     (o plano gratuito do banco tem poucas conexões).
+#
+# COMO FUNCIONA NA HOSPEDAGEM: variáveis de ambiente têm prioridade
+# sobre este arquivo. Na hospedagem definimos:
+#   SPRING_PROFILES_ACTIVE=prod
+#   SPRING_DATASOURCE_URL, SPRING_DATASOURCE_USERNAME, SPRING_DATASOURCE_PASSWORD
+# e o Spring usa esses valores no lugar dos abaixo. Assim a senha do
+# banco da internet nunca fica escrita em arquivo no GitHub.
 # ============================================================
+server:
+  port: ${PORT:8080}
+
 spring:
 
   application:
     name: loadx-api
 
-  # Ativa o perfil "local": o Spring também lê o arquivo
-  # application-local.yaml, onde fica a senha do banco.
+  # No seu computador: perfil "local" (lê application-local.yaml, com a
+  # senha). Na hospedagem, a variável SPRING_PROFILES_ACTIVE troca o perfil.
   profiles:
     active: local
 
-  # Conexão com o PostgreSQL (banco criado no pgAdmin)
+  # Conexão com o PostgreSQL (aqui, o do seu computador)
   datasource:
     url: jdbc:postgresql://localhost:5432/loadx_java
     username: postgres
     # A senha NÃO fica aqui: está em application-local.yaml
+    hikari:
+      maximum-pool-size: 3
 
   # O Spring Data JDBC não cria tabelas sozinho. Por isso mandamos
   # o Spring executar o arquivo schema.sql (pasta resources) a cada

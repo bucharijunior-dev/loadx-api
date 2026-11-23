@@ -1,0 +1,6 @@
+# Arquivos que NAO precisam ir para dentro do container
+target
+.git
+.vscode
+application-local.yaml
+*.md
